@@ -47,6 +47,8 @@ public class Landmarks {
      * The threshold used to display a landmark on the compass.
      */
     private static final double MAX_DISTANCE_KM = 100;
+
+    // TODO: If you use this in production, point this to your live server
     public static final String LANDMARKS_URL = "https://mimming.com/landmarks.json";
 
     /**
