@@ -17,7 +17,7 @@
 <resources>
 
     <!-- Launch-related strings. -->
-    <string name="app_name">Compass Sample</string>
+    <string name="app_name">Kitty Compass</string>
     <string name="show_compass_voice_trigger">show a compass</string>
 
     <!-- Strings describing locations. -->

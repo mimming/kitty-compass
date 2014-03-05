@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.android.glass.sample.compass.model;
+package com.google.android.glass.sample.kittycompass.model;
 
 /**
  * This class represents a point of interest that has geographical coordinates (latitude and

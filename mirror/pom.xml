@@ -18,13 +18,20 @@ limitations under the License.
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google</groupId>
-  <artifactId>glass-java-starter</artifactId>
+  <artifactId>glass-kitty-compass-mirror</artifactId>
   <version>0.1-SNAPSHOT</version>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
   <dependencies>
+    <!-- json parser for locations -->
+    <dependency>
+      <groupId>org.json</groupId>
+      <artifactId>json</artifactId>
+      <version>20140107</version>
+    </dependency>
+
     <!-- Java Google API Client Library -->
     <dependency>
       <groupId>com.google.apis</groupId>

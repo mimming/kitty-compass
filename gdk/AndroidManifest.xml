@@ -15,7 +15,7 @@
 -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.google.android.glass.sample.compass"
+    package="com.google.android.glass.sample.kittycompass"
     android:versionCode="2"
     android:versionName="1.0" >
 
@@ -24,6 +24,7 @@
         android:targetSdkVersion="15" />
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -35,11 +36,11 @@
             android:required="true" />
 
         <activity
-            android:name="com.google.android.glass.sample.compass.CompassMenuActivity"
+            android:name="com.google.android.glass.sample.kittycompass.CompassMenuActivity"
             android:theme="@style/MenuTheme" />
 
         <service
-            android:name="com.google.android.glass.sample.compass.CompassService"
+            android:name="com.google.android.glass.sample.kittycompass.CompassService"
             android:label="@string/app_name"
             android:icon="@drawable/ic_compass"
             android:enabled="true" >
@@ -50,6 +51,16 @@
                 android:name="com.google.android.glass.VoiceTrigger"
                 android:resource="@xml/compass_show" />
         </service>
+        <activity android:name=".StartCompassActivity"
+            android:label="@string/app_name"
+            android:icon="@drawable/ic_compass" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="kittycompass" />
+            </intent-filter>
+        </activity>
 
     </application>
 

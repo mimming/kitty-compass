@@ -14,10 +14,10 @@
  * the License.
  */
 
-package com.google.android.glass.sample.compass;
+package com.google.android.glass.sample.kittycompass;
 
-import com.google.android.glass.sample.compass.model.Place;
-import com.google.android.glass.sample.compass.util.MathUtils;
+import com.google.android.glass.sample.kittycompass.model.Place;
+import com.google.android.glass.sample.kittycompass.util.MathUtils;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;

@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.google.android.glass.sample.compass.model;
+package com.google.android.glass.sample.kittycompass.model;
 
-import com.google.android.glass.sample.compass.R;
-import com.google.android.glass.sample.compass.util.MathUtils;
+import com.google.android.glass.sample.kittycompass.R;
+import com.google.android.glass.sample.kittycompass.util.MathUtils;
 
 import android.content.Context;
 import android.util.Log;
@@ -30,6 +30,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +46,8 @@ public class Landmarks {
     /**
      * The threshold used to display a landmark on the compass.
      */
-    private static final double MAX_DISTANCE_KM = 10;
+    private static final double MAX_DISTANCE_KM = 100;
+    public static final String LANDMARKS_URL = "https://mimming.com/landmarks.json";
 
     /**
      * The list of landmarks loaded from resources.
@@ -55,15 +58,10 @@ public class Landmarks {
      * Initializes a new {@code Landmarks} object by loading the landmarks from the resource
      * bundle.
      */
-    public Landmarks(Context context) {
+    public Landmarks() {
         mPlaces = new ArrayList<Place>();
 
-        // This class will be instantiated on the service's main thread, and doing I/O on the
-        // main thread can be dangerous if it will block for a noticeable amount of time. In
-        // this case, we assume that the landmark data will be small enough that there is not
-        // a significant penalty to the application. If the landmark data were much larger,
-        // we may want to load it in the background instead.
-        String jsonString = readLandmarksResource(context);
+        String jsonString = readLandmarksResource();
         populatePlaceList(jsonString);
     }
 
@@ -127,8 +125,21 @@ public class Landmarks {
     /**
      * Reads the text from {@code res/raw/landmarks.json} and returns it as a string.
      */
-    private static String readLandmarksResource(Context context) {
-        InputStream is = context.getResources().openRawResource(R.raw.landmarks);
+    private static String readLandmarksResource() {
+        URL landmarksUrl;
+        try {
+            landmarksUrl = new URL(LANDMARKS_URL);
+        } catch (MalformedURLException e) {
+            Log.e(TAG, "Landmarks URL is malformed", e);
+            return null;
+        }
+        InputStream is;
+        try {
+            is = landmarksUrl.openStream();
+        } catch (IOException e) {
+            Log.e(TAG, "Could not fetch landmarks", e);
+            return null;
+        }
         StringBuffer buffer = new StringBuffer();
 
         try {

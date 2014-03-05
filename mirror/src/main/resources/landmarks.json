@@ -2,7 +2,7 @@
     "landmarks": [
         {
             "name": "Plaza De Paws",
-            "latitude": 7.5797583,
+            "latitude": 37.5797583,
             "longitude": -122.3537407
         },
         {
@@ -47,3 +47,4 @@
          }
     ]
 }
+

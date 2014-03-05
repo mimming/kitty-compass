@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package com.google.android.glass.sample.compass;
+package com.google.android.glass.sample.kittycompass;
 
-import com.google.android.glass.sample.compass.util.MathUtils;
+import com.google.android.glass.sample.kittycompass.util.MathUtils;
 
-import android.content.Context;
 import android.hardware.GeomagneticField;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;

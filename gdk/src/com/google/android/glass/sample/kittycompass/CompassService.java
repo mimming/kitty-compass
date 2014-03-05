@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package com.google.android.glass.sample.compass;
+package com.google.android.glass.sample.kittycompass;
 
-import com.google.android.glass.sample.compass.model.Landmarks;
-import com.google.android.glass.sample.compass.model.Place;
-import com.google.android.glass.sample.compass.util.MathUtils;
+import com.google.android.glass.sample.kittycompass.model.Landmarks;
+import com.google.android.glass.sample.kittycompass.util.MathUtils;
 import com.google.android.glass.timeline.LiveCard;
 import com.google.android.glass.timeline.LiveCard.PublishMode;
 import com.google.android.glass.timeline.TimelineManager;
@@ -30,18 +29,18 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.hardware.SensorManager;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
 import android.speech.tts.TextToSpeech;
-
-import java.util.List;
+import android.util.Log;
 
 /**
  * The main application service that manages the lifetime of the compass live card and the objects
  * that help out with orientation tracking and landmarks.
  */
 public class CompassService extends Service {
-
+    private static final String TAG = CompassService.class.getSimpleName();
     private static final String LIVE_CARD_ID = "compass";
 
     /**
@@ -75,7 +74,6 @@ public class CompassService extends Service {
     private final CompassBinder mBinder = new CompassBinder();
 
     private OrientationManager mOrientationManager;
-    private Landmarks mLandmarks;
     private TextToSpeech mSpeech;
 
     private TimelineManager mTimelineManager;
@@ -104,7 +102,20 @@ public class CompassService extends Service {
                 (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         mOrientationManager = new OrientationManager(sensorManager, locationManager);
-        mLandmarks = new Landmarks(this);
+
+        // Fetch the landmarks off of the Internet
+        new AsyncTask<Void, Void, Landmarks>() {
+            @Override
+            protected Landmarks doInBackground(Void... params) {
+                return new Landmarks();
+            }
+
+            @Override
+            protected void onPostExecute(Landmarks landmarks) {
+                Log.v(TAG, "Got landmarks. Setting them in the renderer");
+                mRenderer.setLandmarks(landmarks);
+            }
+        }.execute();
     }
 
     @Override
@@ -116,7 +127,7 @@ public class CompassService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (mLiveCard == null) {
             mLiveCard = mTimelineManager.createLiveCard(LIVE_CARD_ID);
-            mRenderer = new CompassRenderer(this, mOrientationManager, mLandmarks);
+            mRenderer = new CompassRenderer(this, mOrientationManager);
 
             mLiveCard.setDirectRenderingEnabled(true).getSurfaceHolder().addCallback(mRenderer);
 
@@ -143,7 +154,6 @@ public class CompassService extends Service {
 
         mSpeech = null;
         mOrientationManager = null;
-        mLandmarks = null;
 
         super.onDestroy();
     }

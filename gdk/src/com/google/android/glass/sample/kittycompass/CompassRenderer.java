@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
-package com.google.android.glass.sample.compass;
+package com.google.android.glass.sample.kittycompass;
 
-import com.google.android.glass.sample.compass.model.Landmarks;
-import com.google.android.glass.sample.compass.model.Place;
+import com.google.android.glass.sample.kittycompass.model.Landmarks;
+import com.google.android.glass.sample.kittycompass.model.Place;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.location.Location;
 import android.os.SystemClock;
 import android.util.Log;
@@ -33,7 +31,6 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.io.File;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -70,7 +67,7 @@ public class CompassRenderer implements SurfaceHolder.Callback {
     private final RelativeLayout mTipsContainer;
     private final TextView mTipsView;
     private final OrientationManager mOrientationManager;
-    private final Landmarks mLandmarks;
+    private Landmarks mLandmarks;
 
     private final OrientationManager.OnChangedListener mCompassListener =
             new OrientationManager.OnChangedListener() {
@@ -89,9 +86,11 @@ public class CompassRenderer implements SurfaceHolder.Callback {
         @Override
         public void onLocationChanged(OrientationManager orientationManager) {
             Location location = orientationManager.getLocation();
-            List<Place> places = mLandmarks.getNearbyLandmarks(
-                    location.getLatitude(), location.getLongitude());
-            mCompassView.setNearbyPlaces(places);
+            if(mLandmarks != null) {
+                List<Place> places = mLandmarks.getNearbyLandmarks(
+                        location.getLatitude(), location.getLongitude());
+                mCompassView.setNearbyPlaces(places);
+            }
         }
 
         @Override
@@ -105,8 +104,7 @@ public class CompassRenderer implements SurfaceHolder.Callback {
      * Creates a new instance of the {@code CompassRenderer} with the specified context,
      * orientation manager, and landmark collection.
      */
-    public CompassRenderer(Context context, OrientationManager orientationManager,
-                Landmarks landmarks) {
+    public CompassRenderer(Context context, OrientationManager orientationManager) {
         LayoutInflater inflater = LayoutInflater.from(context);
         mLayout = (FrameLayout) inflater.inflate(R.layout.compass, null);
         mLayout.setWillNotDraw(false);
@@ -116,7 +114,6 @@ public class CompassRenderer implements SurfaceHolder.Callback {
         mTipsView = (TextView) mLayout.findViewById(R.id.tips_view);
 
         mOrientationManager = orientationManager;
-        mLandmarks = landmarks;
 
         mCompassView.setOrientationManager(mOrientationManager);
     }
@@ -137,9 +134,11 @@ public class CompassRenderer implements SurfaceHolder.Callback {
 
         if (mOrientationManager.hasLocation()) {
             Location location = mOrientationManager.getLocation();
-            List<Place> nearbyPlaces = mLandmarks.getNearbyLandmarks(
-                    location.getLatitude(), location.getLongitude());
-            mCompassView.setNearbyPlaces(nearbyPlaces);
+            if(mLandmarks != null) {
+                List<Place> nearbyPlaces = mLandmarks.getNearbyLandmarks(
+                        location.getLatitude(), location.getLongitude());
+                mCompassView.setNearbyPlaces(nearbyPlaces);
+            }
         }
 
         mRenderThread = new RenderThread();
@@ -220,6 +219,15 @@ public class CompassRenderer implements SurfaceHolder.Callback {
             float newAlpha = (show ? 1.0f : 0.0f);
             mTipsContainer.animate().alpha(newAlpha).start();
         }
+    }
+
+    public void setLandmarks(Landmarks landmarks) {
+        mLandmarks = landmarks;
+        Location location = mOrientationManager.getLocation();
+        List<Place> places = mLandmarks.getNearbyLandmarks(
+                location.getLatitude(), location.getLongitude());
+        mCompassView.setNearbyPlaces(places);
+
     }
 
     /**
