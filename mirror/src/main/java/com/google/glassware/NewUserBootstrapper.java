@@ -17,11 +17,14 @@ package com.google.glassware;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
-import com.google.api.services.mirror.model.*;
+import com.google.api.services.mirror.model.MenuItem;
+import com.google.api.services.mirror.model.MenuValue;
+import com.google.api.services.mirror.model.NotificationConfig;
+import com.google.api.services.mirror.model.Subscription;
+import com.google.api.services.mirror.model.TimelineItem;
 import com.google.common.collect.Lists;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -62,16 +65,16 @@ public class NewUserBootstrapper {
     timelineItem.setText("Welcome to Kitty Compass");
     timelineItem.setNotification(new NotificationConfig().setLevel("DEFAULT"));
     final HttpServletRequest finalReq = req;
-    timelineItem.setMenuItems(new ArrayList<MenuItem>(){{
-      this.add(new MenuItem()
-          .setAction("OPEN_URI")
-          .setPayload("kittycompass://open")
-          .setValues(new ArrayList<MenuValue>(){{
-            this.add(new MenuValue()
+    timelineItem.setMenuItems(
+        Lists.newArrayList(new MenuItem()
+            .setAction("OPEN_URI")
+            .setPayload("kittycompass://open")
+            .setValues(Lists.newArrayList(new MenuValue()
                 .setDisplayName("Open")
-                .setIconUrl(WebUtil.buildUrl(finalReq, "/static/images/ic_compass.png")));
-          }}));
-    }});
+                .setIconUrl(WebUtil.buildUrl(finalReq, "/static/images/ic_compass.png"))
+            ))
+        )
+    );
 
 
     TimelineItem insertedItem = MirrorClient.insertTimelineItem(credential, timelineItem);
