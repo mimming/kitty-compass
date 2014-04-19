@@ -1,3 +1,7 @@
+# Warning: This sample is deprecated. It last worked as of XE12.
+That being said, a pull request to fix it would be welcome :)
+
+
 Kitty Compass
 =======
 A hybrid Glassware Sample created for the 
