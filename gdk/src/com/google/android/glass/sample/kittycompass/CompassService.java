@@ -20,7 +20,6 @@ import com.google.android.glass.sample.kittycompass.model.Landmarks;
 import com.google.android.glass.sample.kittycompass.util.MathUtils;
 import com.google.android.glass.timeline.LiveCard;
 import com.google.android.glass.timeline.LiveCard.PublishMode;
-import com.google.android.glass.timeline.TimelineManager;
 
 import android.app.PendingIntent;
 import android.app.Service;
@@ -76,15 +75,12 @@ public class CompassService extends Service {
     private OrientationManager mOrientationManager;
     private TextToSpeech mSpeech;
 
-    private TimelineManager mTimelineManager;
     private LiveCard mLiveCard;
     private CompassRenderer mRenderer;
 
     @Override
     public void onCreate() {
         super.onCreate();
-
-        mTimelineManager = TimelineManager.from(this);
 
         // Even though the text-to-speech engine is only used in response to a menu action, we
         // initialize it when the application starts so that we avoid delays that could occur
@@ -126,7 +122,7 @@ public class CompassService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (mLiveCard == null) {
-            mLiveCard = mTimelineManager.createLiveCard(LIVE_CARD_ID);
+            mLiveCard = new LiveCard(this, LIVE_CARD_ID);
             mRenderer = new CompassRenderer(this, mOrientationManager);
 
             mLiveCard.setDirectRenderingEnabled(true).getSurfaceHolder().addCallback(mRenderer);

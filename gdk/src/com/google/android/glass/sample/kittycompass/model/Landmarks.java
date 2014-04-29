@@ -140,7 +140,7 @@ public class Landmarks {
             is = landmarksUrl.openStream();
         } catch (IOException e) {
             Log.e(TAG, "Could not fetch landmarks", e);
-            return null;
+            return "";
         }
         StringBuffer buffer = new StringBuffer();
 
